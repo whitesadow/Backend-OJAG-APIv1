@@ -24,7 +24,7 @@ public class Main {
             System.out.println("✓ Servidor creado en puerto " + PORT);
 
             // Configurar rutas
-            setupRoutes();
+            setupRoutes(server);
 
             // Iniciar servidor
             server.setExecutor(null);
@@ -44,38 +44,7 @@ public class Main {
     /**
      * Configura todas las rutas HTTP de la API
      */
-    private static void setupRoutes() {
-        // Rutas de Productos
-        server.createContext("/productos", new ProductoHandler());
-        System.out.println("  ✓ GET /productos");
-
-        // Rutas de Usuario (Autenticación)
-        server.createContext("/usuario/registro", new UsuarioHandler());
-        System.out.println("  ✓ POST /usuario/registro");
-
-        server.createContext("/usuario/login", new UsuarioHandler());
-        System.out.println("  ✓ POST /usuario/login");
-
-        // Rutas de Carrito
-        server.createContext("/carrito", new CarritoHandler());
-        System.out.println("  ✓ GET /carrito");
-
-        server.createContext("/carrito/agregar", new CarritoHandler());
-        System.out.println("  ✓ POST /carrito/agregar");
-
-        server.createContext("/carrito/eliminar", new CarritoHandler());
-        System.out.println("  ✓ DELETE /carrito/eliminar/{id}");
-
-        // Rutas de Checkout y Órdenes
-        server.createContext("/checkout", new CheckoutHandler());
-        System.out.println("  ✓ POST /checkout");
-
-        server.createContext("/ordenes", new OrdenesHandler());
-        System.out.println("  ✓ GET /ordenes");
-
-        server.createContext("/orden", new OrdenesHandler());
-        System.out.println("  ✓ GET /orden/{id}");
-
+    private static void setupRoutes(HttpServer server) {
         // Ruta raíz para health check
         server.createContext("/", exchange -> {
             String response = "{\"status\": \"API activa\", \"version\": \"1.0\", \"puerto\": " + PORT + "}";
@@ -85,6 +54,29 @@ public class Main {
             exchange.close();
         });
         System.out.println("  ✓ GET / (health check)");
+
+        // Rutas de Productos
+        server.createContext("/productos", new ProductoHandler());
+        System.out.println("  ✓ GET /productos");
+
+        // Rutas de Usuarios
+        server.createContext("/usuarios", new UsuarioHandler());
+        System.out.println("  ✓ GET /usuarios");
+        System.out.println("  ✓ POST /usuarios (registro/login)");
+
+        // Rutas de Carrito
+        server.createContext("/carrito", new CarritoHandler());
+        System.out.println("  ✓ GET /carrito");
+        System.out.println("  ✓ POST /carrito/agregar");
+        System.out.println("  ✓ DELETE /carrito/eliminar/{id}");
+
+        // Rutas de Checkout y Órdenes
+        server.createContext("/checkout", new CheckoutHandler());
+        System.out.println("  ✓ POST /checkout");
+
+        server.createContext("/ordenes", new OrdenesHandler());
+        System.out.println("  ✓ GET /ordenes");
+        System.out.println("  ✓ GET /orden/{id}");
     }
 
     /**

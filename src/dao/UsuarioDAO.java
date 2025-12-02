@@ -101,4 +101,26 @@ public class UsuarioDAO {
             return false;
         }
     }
+
+    public static List<Usuario> obtenerTodos() {
+        List<Usuario> usuarios = new ArrayList<>();
+        try {
+            Connection conn = DatabaseConnection.getConnection();
+            String sql = "SELECT * FROM usuarios";
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            
+            while (rs.next()) {
+                Usuario usuario = new Usuario();
+                usuario.setId(rs.getInt("id"));
+                usuario.setNombre(rs.getString("nombre"));
+                usuario.setEmail(rs.getString("correo"));
+                usuario.setTelefono(rs.getString("telefono"));
+                usuarios.add(usuario);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al obtener usuarios: " + e.getMessage());
+        }
+        return usuarios;
+    }
 }
